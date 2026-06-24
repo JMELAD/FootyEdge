@@ -70,7 +70,11 @@ async function callGroq(messages) {
   });
   const data = await response.json();
   if (data.error) throw new Error(data.error.message || JSON.stringify(data.error));
-  return data.choices[0].message.content;
+  const text = data.choices[0].message.content;
+  const clean = text.replace(/```json|```/g, '').trim();
+  const jsonMatch = clean.match(/\{[\s\S]*\}/);
+  if (!jsonMatch) throw new Error('No valid JSON found in response');
+  return jsonMatch[0];
 }
 
 // ─── BET SLIP ANALYSIS ────────────────────────────────────
@@ -113,49 +117,21 @@ async function analyseBetSlip() {
     const prompt = `You are FootyEdge, an expert AFL betting analyst for the 2026 season.
 
 Analyse this bet slip image and provide a comprehensive breakdown. For EACH leg automatically consider:
-1. Injury status & team selection
-2. Recent form (last 3-4 games)
-3. Tagging risk — does the opposition tag? Who is their tagger? Have they tagged this player before?
+1. Injury status and team selection
+2. Recent form last 3-4 games
+3. Tagging risk - does the opposition tag? Who is their tagger? Have they tagged this player before?
 4. Role changes or positional shifts
 5. Head to head matchup history
 6. Venue factors
 7. Opposition defensive weaknesses
 8. Game script risk
 
-For each leg provide:
-- Confidence rating (1-10)
-- Value assessment (VALUE / FAIR / POOR)
-- Tagging risk (HIGH / MEDIUM / LOW) with specific tagger named if known
-- Key risks
-- Verdict (BACK IT / LEAN OVER / LEAN UNDER / AVOID)
-- 2-3 sentences of specific reasoning
+For each leg provide a confidence rating 1-10, value assessment VALUE or FAIR or POOR, tagging risk HIGH or MEDIUM or LOW with specific tagger named if known, key risks, verdict BACK IT or LEAN OVER or LEAN UNDER or AVOID, and 2-3 sentences of specific reasoning.
 
 Then provide overall multi rating, singles vs multi recommendation, weakest leg and key insight.
 
-Respond in this JSON format only, no markdown:
-{
-  "game": "Team A v Team B",
-  "date": "date string",
-  "odds": "2.15",
-  "legs": [
-    {
-      "player": "Player Name",
-      "bet": "20+ Disposals",
-      "confidence": 8,
-      "value": "VALUE",
-      "tagging_risk": "LOW",
-      "tagger": "None identified",
-      "verdict": "BACK IT",
-      "verdict_type": "back",
-      "reasoning": "Specific reasoning here",
-      "key_risk": "Main risk factor"
-    }
-  ],
-  "overall_rating": 7,
-  "recommendation": "Play as multi",
-  "weakest_leg": "Player name — reason",
-  "key_insight": "Overall tactical insight"
-}`;
+Respond in this exact JSON format with no markdown and no extra text outside the JSON:
+{"game":"Team A v Team B","date":"date string","odds":"2.15","legs":[{"player":"Player Name","bet":"20+ Disposals","confidence":8,"value":"VALUE","tagging_risk":"LOW","tagger":"None identified","verdict":"BACK IT","verdict_type":"back","reasoning":"Specific reasoning here","key_risk":"Main risk factor"}],"overall_rating":7,"recommendation":"Play as multi","weakest_leg":"Player name reason","key_insight":"Overall tactical insight"}`;
 
     const text = await callGroq([
       {
@@ -168,7 +144,7 @@ Respond in this JSON format only, no markdown:
     ]);
 
     clearInterval(stepInterval);
-    const parsed = JSON.parse(text.replace(/```json|```/g, '').trim());
+    const parsed = JSON.parse(text);
     renderBetResult(parsed);
 
   } catch (err) {
@@ -291,28 +267,16 @@ async function analyseDisposals() {
 
   const playerList = selectedPlayers.map(p => `${p[0]} (${p[1]}, ${p[2]}, avg ${p[3]}${p[4] ? ', new to club 2026' : ''})`).join(', ');
 
-  const prompt = `You are FootyEdge, expert AFL analyst 2026. Analyse disposal potential for these players against ${opp}. Consider tagging risk, ${opp}'s defensive weaknesses, recent form and role for each player.
+  const prompt = `You are FootyEdge, expert AFL analyst 2026. Analyse disposal potential for these players against ${opp}. Consider tagging risk, defensive weaknesses, recent form and role for each player.
 
 Players: ${playerList}
 
-Respond in JSON only, no markdown:
-{
-  "opposition_weakness": "2 sentence summary of ${opp} defensive weakness",
-  "players": [
-    {
-      "name": "exact name",
-      "rating": "High|Medium|Low",
-      "expected": "28-32",
-      "tagging_risk": "LOW|MEDIUM|HIGH",
-      "reason": "2 specific sentences"
-    }
-  ],
-  "key_insight": "tactical insight"
-}`;
+Respond in this exact JSON format with no markdown and no extra text outside the JSON:
+{"opposition_weakness":"2 sentence summary","players":[{"name":"exact name","rating":"High|Medium|Low","expected":"28-32","tagging_risk":"LOW|MEDIUM|HIGH","reason":"2 specific sentences"}],"key_insight":"tactical insight"}`;
 
   try {
     const text = await callGroq([{ role: 'user', content: prompt }]);
-    const parsed = JSON.parse(text.replace(/```json|```/g, '').trim());
+    const parsed = JSON.parse(text);
 
     let html = `<div class="result-card"><div class="result-player" style="color:#00e676;margin-bottom:8px">vs ${opp}</div><div class="result-text">${parsed.opposition_weakness}</div></div>`;
 
@@ -428,19 +392,12 @@ Ruck: ${byPos.RUC.join(', ')||'none'}
 Forwards: ${byPos.FWD.join(', ')||'none'}
 Emergency: ${byPos.EMG.join(', ')||'none'}
 
-Respond in JSON only, no markdown:
-{
-  "overall_rating": 7,
-  "best_matchups": ["player — reason", "player — reason"],
-  "watch_out": ["player — reason"],
-  "underperformers": ["player — reason"],
-  "key_insights": ["insight 1", "insight 2", "insight 3"],
-  "recommendation": "overall tactical recommendation"
-}`;
+Respond in this exact JSON format with no markdown and no extra text outside the JSON:
+{"overall_rating":7,"best_matchups":["player reason","player reason"],"watch_out":["player reason"],"underperformers":["player reason"],"key_insights":["insight 1","insight 2","insight 3"],"recommendation":"overall tactical recommendation"}`;
 
   try {
     const text = await callGroq([{ role: 'user', content: prompt }]);
-    const parsed = JSON.parse(text.replace(/```json|```/g, '').trim());
+    const parsed = JSON.parse(text);
 
     const rColor = parsed.overall_rating >= 7 ? '#00e676' : parsed.overall_rating >= 5 ? '#ffab00' : '#ff5252';
     let html = `<div class="overall-card">
