@@ -1,5 +1,5 @@
 // ─── CONFIG ───────────────────────────────────────────────
-const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
+const GROQ_API_URL = '/api/analyse';
 const MODEL = 'llama-3.3-70b-versatile';
 
 // ─── API KEY ──────────────────────────────────────────────
@@ -71,6 +71,21 @@ function handleImage(event) {
   reader.readAsDataURL(file);
 }
 
+// ─── GROQ API CALL ────────────────────────────────────────
+async function callGroq(messages) {
+  const response = await fetch(GROQ_API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      apiKey: getApiKey(),
+      messages: messages
+    })
+  });
+  const data = await response.json();
+  if (data.error) throw new Error(data.error.message || JSON.stringify(data.error));
+  return data.choices[0].message.content;
+}
+
 // ─── BET SLIP ANALYSIS ────────────────────────────────────
 async function analyseBetSlip() {
   if (!checkApiKey()) return;
@@ -80,13 +95,13 @@ async function analyseBetSlip() {
   const resultArea = document.getElementById('result-area');
 
   btn.textContent = '⏳ Analysing...';
-  document.querySelector('.btn-analyse').disabled = true;
+  document.querySelector('#tab-analyse .btn-analyse').disabled = true;
 
   resultArea.innerHTML = `
     <div class="result-card loading">
       <span class="loading-spinner">🏉</span>
       <div class="loading-text">Analysing your bet slip...</div>
-      <div class="loading-step">🔍 Reading slip details...</div>
+      <div class="loading-step" id="loading-step">🔍 Reading slip details...</div>
     </div>`;
 
   const steps = [
@@ -101,40 +116,37 @@ async function analyseBetSlip() {
 
   let stepIdx = 0;
   const stepInterval = setInterval(() => {
-    if (stepIdx < steps.length) {
-      document.querySelector('.loading-step').textContent = steps[stepIdx];
+    const el = document.getElementById('loading-step');
+    if (el && stepIdx < steps.length) {
+      el.textContent = steps[stepIdx];
       stepIdx++;
     }
   }, 2000);
 
   try {
-    const prompt = `You are FootyEdge, an expert AFL betting analyst for the 2026 season. 
+    const prompt = `You are FootyEdge, an expert AFL betting analyst for the 2026 season.
 
-Analyse this bet slip image and provide a comprehensive breakdown. For EACH leg automatically research and consider:
-1. 🏥 Injury status & team selection news
-2. 📊 Recent form (last 3-4 games)
-3. 🔒 Tagging risk — does the opposition tag? Who is their tagger? Have they tagged this player before?
-4. 🔄 Role changes or positional shifts
-5. ⚔️ Head to head matchup history vs this opposition
-6. 🏟️ Venue factors
-7. 📈 Opposition defensive weaknesses
-8. 🎯 Game script risk
+Analyse this bet slip image and provide a comprehensive breakdown. For EACH leg automatically consider:
+1. Injury status & team selection
+2. Recent form (last 3-4 games)
+3. Tagging risk — does the opposition tag? Who is their tagger? Have they tagged this player before?
+4. Role changes or positional shifts
+5. Head to head matchup history
+6. Venue factors
+7. Opposition defensive weaknesses
+8. Game script risk
 
 For each leg provide:
-- Player name and bet details
 - Confidence rating (1-10)
 - Value assessment (VALUE / FAIR / POOR)
-- Tagging risk (HIGH / MEDIUM / LOW) with specific tagger named if applicable
+- Tagging risk (HIGH / MEDIUM / LOW) with specific tagger named if known
 - Key risks
-- Verdict (BACK IT ✅ / LEAN OVER / LEAN UNDER / AVOID ❌)
+- Verdict (BACK IT / LEAN OVER / LEAN UNDER / AVOID)
 - 2-3 sentences of specific reasoning
 
-Then provide:
-- Overall multi rating (X/10)
-- Singles vs multi recommendation
-- The weakest leg and why
+Then provide overall multi rating, singles vs multi recommendation, weakest leg and key insight.
 
-Format your response as JSON like this:
+Respond in this JSON format only, no markdown:
 {
   "game": "Team A v Team B",
   "date": "date string",
@@ -159,63 +171,33 @@ Format your response as JSON like this:
   "key_insight": "Overall tactical insight"
 }`;
 
-    const response = await fetch(GROQ_API_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${getApiKey()}`
-      },
-      body: JSON.stringify({
-        model: MODEL,
-        max_tokens: 2000,
-        messages: [
-          {
-            role: 'user',
-            content: [
-              {
-                type: 'text',
-                text: prompt
-              },
-              {
-                type: 'image_url',
-                image_url: {
-                  url: `data:image/jpeg;base64,${currentImageBase64}`
-                }
-              }
-            ]
-          }
+    const text = await callGroq([
+      {
+        role: 'user',
+        content: [
+          { type: 'text', text: prompt },
+          { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${currentImageBase64}` } }
         ]
-      })
-    });
+      }
+    ]);
 
     clearInterval(stepInterval);
-
-    const data = await response.json();
-
-    if (data.error) {
-      throw new Error(data.error.message);
-    }
-
-    const text = data.choices[0].message.content;
-    const clean = text.replace(/```json|```/g, '').trim();
-    const parsed = JSON.parse(clean);
-
+    const parsed = JSON.parse(text.replace(/```json|```/g, '').trim());
     renderBetResult(parsed);
 
   } catch (err) {
     clearInterval(stepInterval);
-    resultArea.innerHTML = `<div class="result-card"><p class="muted">Error: ${err.message}. Please check your API key and try again.</p></div>`;
+    resultArea.innerHTML = `<div class="result-card"><p class="muted">❌ Error: ${err.message}</p><p class="muted" style="margin-top:8px">Please check your API key and try again.</p></div>`;
   }
 
   btn.textContent = '🔍 Analyse Slip';
-  document.querySelector('.btn-analyse').disabled = false;
+  document.querySelector('#tab-analyse .btn-analyse').disabled = false;
 }
 
 function renderBetResult(data) {
   const resultArea = document.getElementById('result-area');
   let html = '';
 
-  // Overall card
   const ratingColor = data.overall_rating >= 7 ? '#00e676' : data.overall_rating >= 5 ? '#ffab00' : '#ff5252';
   html += `
     <div class="overall-card">
@@ -228,7 +210,6 @@ function renderBetResult(data) {
       <div class="result-text"><strong>💡 Key Insight:</strong> ${data.key_insight}</div>
     </div>`;
 
-  // Individual legs
   data.legs.forEach(leg => {
     const verdictClass = leg.verdict_type === 'back' ? 'verdict-back' : leg.verdict_type === 'avoid' ? 'verdict-avoid' : 'verdict-lean';
     const confColor = leg.confidence >= 7 ? '#00e676' : leg.confidence >= 5 ? '#ffab00' : '#ff5252';
@@ -246,17 +227,13 @@ function renderBetResult(data) {
             <div style="font-size:11px;color:#4a5568">confidence</div>
           </div>
         </div>
-
         <div class="info-row">
           <span class="info-pill">📊 ${leg.value}</span>
           <span class="info-pill" style="color:${tagColor}">🔒 Tag Risk: ${leg.tagging_risk}</span>
           ${leg.tagger && leg.tagger !== 'None identified' ? `<span class="info-pill">👤 ${leg.tagger}</span>` : ''}
         </div>
-
         <div class="verdict-badge ${verdictClass}">${leg.verdict}</div>
-
         <div class="result-text">${leg.reasoning}</div>
-
         <hr class="divider">
         <div class="result-text"><strong>⚠️ Key Risk:</strong> ${leg.key_risk}</div>
       </div>`;
@@ -267,7 +244,6 @@ function renderBetResult(data) {
 
 // ─── DISPOSAL ANALYSIS ────────────────────────────────────
 let selectedPlayers = [];
-let filteredPlayers = [...PLAYERS];
 
 function filterPlayers() {
   const search = document.getElementById('player-search').value.toLowerCase().trim();
@@ -330,13 +306,13 @@ async function analyseDisposals() {
 
   const playerList = selectedPlayers.map(p => `${p[0]} (${p[1]}, ${p[2]}, avg ${p[3]}${p[4] ? ', new to club 2026' : ''})`).join(', ');
 
-  const prompt = `You are FootyEdge, an expert AFL analyst for 2026. Analyse these players for disposal potential against ${opp}. For each player consider tagging risk, ${opp}'s defensive weaknesses, recent form, and role.
+  const prompt = `You are FootyEdge, expert AFL analyst 2026. Analyse disposal potential for these players against ${opp}. Consider tagging risk, ${opp}'s defensive weaknesses, recent form and role for each player.
 
 Players: ${playerList}
 
-Respond in JSON only:
+Respond in JSON only, no markdown:
 {
-  "opposition_weakness": "2 sentence summary",
+  "opposition_weakness": "2 sentence summary of ${opp} defensive weakness",
   "players": [
     {
       "name": "exact name",
@@ -350,13 +326,7 @@ Respond in JSON only:
 }`;
 
   try {
-    const response = await fetch(GROQ_API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getApiKey()}` },
-      body: JSON.stringify({ model: MODEL, max_tokens: 1000, messages: [{ role: 'user', content: prompt }] })
-    });
-    const data = await response.json();
-    const text = data.choices[0].message.content;
+    const text = await callGroq([{ role: 'user', content: prompt }]);
     const parsed = JSON.parse(text.replace(/```json|```/g, '').trim());
 
     let html = `<div class="result-card"><div class="result-player" style="color:#00e676;margin-bottom:8px">vs ${opp}</div><div class="result-text">${parsed.opposition_weakness}</div></div>`;
@@ -367,7 +337,7 @@ Respond in JSON only:
       const tagColor = p.tagging_risk === 'HIGH' ? '#ff5252' : p.tagging_risk === 'MEDIUM' ? '#ffab00' : '#00e676';
       html += `<div class="result-card">
         <div class="result-header">
-          <div><div class="result-player">${p.name}</div><div class="result-detail">${orig ? orig[1] + ' · ' + orig[2] : ''}</div></div>
+          <div><div class="result-player">${p.name}</div><div class="result-detail">${orig ? orig[1] + ' · ' + orig[2] + ' · avg ' + orig[3] : ''}</div></div>
           <span class="rating-badge ${rClass}">${p.rating}</span>
         </div>
         <div class="info-row">
@@ -382,7 +352,7 @@ Respond in JSON only:
     resultDiv.innerHTML = html;
 
   } catch (err) {
-    resultDiv.innerHTML = `<div class="result-card"><p class="muted">Error: ${err.message}</p></div>`;
+    resultDiv.innerHTML = `<div class="result-card"><p class="muted">❌ Error: ${err.message}</p></div>`;
   }
 }
 
@@ -391,29 +361,31 @@ let b22Players = {};
 let activeB22Slot = null;
 
 const B22_SLOTS = [
-  { id: 'd1', pos: 'DEF' }, { id: 'd2', pos: 'DEF' }, { id: 'd3', pos: 'DEF' },
-  { id: 'd4', pos: 'DEF' }, { id: 'd5', pos: 'DEF' }, { id: 'd6', pos: 'DEF' },
-  { id: 'm1', pos: 'MID' }, { id: 'm2', pos: 'MID' }, { id: 'm3', pos: 'MID' },
-  { id: 'm4', pos: 'MID' }, { id: 'm5', pos: 'MID' }, { id: 'm6', pos: 'MID' },
-  { id: 'm7', pos: 'MID' }, { id: 'm8', pos: 'MID' },
-  { id: 'r1', pos: 'RUC' },
-  { id: 'f1', pos: 'FWD' }, { id: 'f2', pos: 'FWD' }, { id: 'f3', pos: 'FWD' },
-  { id: 'f4', pos: 'FWD' }, { id: 'f5', pos: 'FWD' }, { id: 'f6', pos: 'FWD' },
-  { id: 'em', pos: 'EMG' },
+  {id:'d1',pos:'DEF'},{id:'d2',pos:'DEF'},{id:'d3',pos:'DEF'},
+  {id:'d4',pos:'DEF'},{id:'d5',pos:'DEF'},{id:'d6',pos:'DEF'},
+  {id:'m1',pos:'MID'},{id:'m2',pos:'MID'},{id:'m3',pos:'MID'},
+  {id:'m4',pos:'MID'},{id:'m5',pos:'MID'},{id:'m6',pos:'MID'},
+  {id:'m7',pos:'MID'},{id:'m8',pos:'MID'},
+  {id:'r1',pos:'RUC'},
+  {id:'f1',pos:'FWD'},{id:'f2',pos:'FWD'},{id:'f3',pos:'FWD'},
+  {id:'f4',pos:'FWD'},{id:'f5',pos:'FWD'},{id:'f6',pos:'FWD'},
+  {id:'em',pos:'EMG'},
 ];
 
 function initB22() {
-  const grids = { DEF: 'def-slots', MID: 'mid-slots', RUC: 'ruc-slots', FWD: 'fwd-slots', EMG: 'fwd-slots' };
+  const grids = {DEF:'def-slots',MID:'mid-slots',RUC:'ruc-slots',FWD:'fwd-slots',EMG:'fwd-slots'};
   B22_SLOTS.forEach(s => {
     const grid = document.getElementById(grids[s.pos]);
+    if (!grid) return;
     const div = document.createElement('div');
-    div.className = 'pos-slot' + (b22Players[s.id] ? ' filled' : '');
+    div.className = 'pos-slot';
     div.id = 'b22-' + s.id;
-    div.textContent = b22Players[s.id] ? b22Players[s.id][0].split(' ').pop() : '+';
-    div.title = b22Players[s.id] ? b22Players[s.id][0] : 'Add player';
+    div.textContent = '+';
+    div.title = 'Add player';
     div.addEventListener('click', () => {
       activeB22Slot = s.id;
       document.getElementById('b22-search').focus();
+      document.getElementById('b22-search').scrollIntoView({behavior:'smooth'});
     });
     grid.appendChild(div);
   });
@@ -435,7 +407,11 @@ function filterB22() {
       if (activeB22Slot) {
         b22Players[activeB22Slot] = p;
         const slot = document.getElementById('b22-' + activeB22Slot);
-        if (slot) { slot.textContent = p[0].split(' ').pop(); slot.className = 'pos-slot filled'; slot.title = p[0]; }
+        if (slot) {
+          slot.textContent = p[0].split(' ').pop();
+          slot.className = 'pos-slot filled';
+          slot.title = p[0];
+        }
         activeB22Slot = null;
       }
       document.getElementById('b22-search').value = '';
@@ -457,18 +433,18 @@ async function analyseB22() {
   const resultDiv = document.getElementById('b22-result');
   resultDiv.innerHTML = `<div class="result-card loading"><span class="loading-spinner">🏉</span><div class="loading-text">Analysing your Best 22...</div></div>`;
 
-  const byPos = { DEF: [], MID: [], RUC: [], FWD: [], EMG: [] };
+  const byPos = {DEF:[],MID:[],RUC:[],FWD:[],EMG:[]};
   B22_SLOTS.forEach(s => { if (b22Players[s.id]) byPos[s.pos].push(b22Players[s.id][0] + ' (avg ' + b22Players[s.id][3] + ')'); });
 
   const prompt = `You are FootyEdge, expert AFL analyst 2026. Analyse this ${myTeam} Best 22 against ${opp}.
 
-Defenders: ${byPos.DEF.join(', ') || 'none'}
-Midfielders: ${byPos.MID.join(', ') || 'none'}
-Ruck: ${byPos.RUC.join(', ') || 'none'}
-Forwards: ${byPos.FWD.join(', ') || 'none'}
-Emergency: ${byPos.EMG.join(', ') || 'none'}
+Defenders: ${byPos.DEF.join(', ')||'none'}
+Midfielders: ${byPos.MID.join(', ')||'none'}
+Ruck: ${byPos.RUC.join(', ')||'none'}
+Forwards: ${byPos.FWD.join(', ')||'none'}
+Emergency: ${byPos.EMG.join(', ')||'none'}
 
-Respond in JSON:
+Respond in JSON only, no markdown:
 {
   "overall_rating": 7,
   "best_matchups": ["player — reason", "player — reason"],
@@ -479,13 +455,7 @@ Respond in JSON:
 }`;
 
   try {
-    const response = await fetch(GROQ_API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getApiKey()}` },
-      body: JSON.stringify({ model: MODEL, max_tokens: 1000, messages: [{ role: 'user', content: prompt }] })
-    });
-    const data = await response.json();
-    const text = data.choices[0].message.content;
+    const text = await callGroq([{ role: 'user', content: prompt }]);
     const parsed = JSON.parse(text.replace(/```json|```/g, '').trim());
 
     const rColor = parsed.overall_rating >= 7 ? '#00e676' : parsed.overall_rating >= 5 ? '#ffab00' : '#ff5252';
@@ -494,27 +464,25 @@ Respond in JSON:
       <div class="overall-rating" style="color:${rColor}">${parsed.overall_rating}<span style="font-size:20px;color:#4a5568">/10</span></div>
       <div class="overall-sub">Team Matchup Rating</div>
       <div class="result-text">${parsed.recommendation}</div>
-    </div>`;
-
-    html += `<div class="result-card">
+    </div>
+    <div class="result-card">
       <div class="result-player" style="color:#00e676;margin-bottom:8px">✅ Best Matchups</div>
-      ${parsed.best_matchups.map(m => `<div class="result-text">• ${m}</div>`).join('')}
+      ${parsed.best_matchups.map(m=>`<div class="result-text">• ${m}</div>`).join('')}
       <hr class="divider">
       <div class="result-player" style="color:#ffab00;margin-bottom:8px">👀 Watch Out For</div>
-      ${parsed.watch_out.map(m => `<div class="result-text">• ${m}</div>`).join('')}
+      ${parsed.watch_out.map(m=>`<div class="result-text">• ${m}</div>`).join('')}
       <hr class="divider">
       <div class="result-player" style="color:#ff5252;margin-bottom:8px">⚠️ May Underperform</div>
-      ${parsed.underperformers.map(m => `<div class="result-text">• ${m}</div>`).join('')}
-    </div>`;
-
-    html += `<div class="result-card">
+      ${parsed.underperformers.map(m=>`<div class="result-text">• ${m}</div>`).join('')}
+    </div>
+    <div class="result-card">
       <div class="result-player" style="margin-bottom:8px">💡 Key Insights</div>
-      ${parsed.key_insights.map((i, idx) => `<div class="result-text">${idx + 1}. ${i}</div>`).join('')}
+      ${parsed.key_insights.map((i,idx)=>`<div class="result-text">${idx+1}. ${i}</div>`).join('')}
     </div>`;
 
     resultDiv.innerHTML = html;
   } catch (err) {
-    resultDiv.innerHTML = `<div class="result-card"><p class="muted">Error: ${err.message}</p></div>`;
+    resultDiv.innerHTML = `<div class="result-card"><p class="muted">❌ Error: ${err.message}</p></div>`;
   }
 }
 
