@@ -68,4 +68,81 @@
         <option>Collingwood</option><option>Essendon</option><option>Fremantle</option>
         <option>Geelong Cats</option><option>Gold Coast Suns</option><option>GWS Giants</option>
         <option>Hawthorn</option><option>Melbourne</option><option>North Melbourne</option>
-        <option>Port
+        <option>Port Adelaide</option><option>Richmond</option><option>St Kilda</option>
+        <option>Sydney Swans</option><option>West Coast Eagles</option><option>Western Bulldogs</option>
+      </select>
+
+      <input type="text" id="player-search" class="input-field" placeholder="Search player name..." oninput="filterPlayers()">
+      <div class="sugg-box" id="sugg-box"></div>
+
+      <div class="selected-label">Selected <span id="sel-count">(0/8)</span></div>
+      <div class="chips-wrap" id="chips-wrap"><span class="muted">No players selected</span></div>
+
+      <button class="btn-analyse" onclick="analyseDisposals()">🏉 Analyse Matchup</button>
+    </div>
+    <div id="disposal-result"></div>
+  </div>
+
+  <!-- BEST 22 TAB -->
+  <div id="tab-best22" class="tab-content">
+    <div class="section-card">
+      <h2 class="section-title">Best 22 Builder</h2>
+      <p class="section-sub">Build your team and get a full matchup breakdown</p>
+
+      <select id="my-team" class="input-field">
+        <option value="">Your team...</option>
+        <option>Adelaide Crows</option><option>Brisbane Lions</option><option>Carlton</option>
+        <option>Collingwood</option><option>Essendon</option><option>Fremantle</option>
+        <option>Geelong Cats</option><option>Gold Coast Suns</option><option>GWS Giants</option>
+        <option>Hawthorn</option><option>Melbourne</option><option>North Melbourne</option>
+        <option>Port Adelaide</option><option>Richmond</option><option>St Kilda</option>
+        <option>Sydney Swans</option><option>West Coast Eagles</option><option>Western Bulldogs</option>
+      </select>
+
+      <select id="opp-team" class="input-field">
+        <option value="">Opposition team...</option>
+        <option>Adelaide Crows</option><option>Brisbane Lions</option><option>Carlton</option>
+        <option>Collingwood</option><option>Essendon</option><option>Fremantle</option>
+        <option>Geelong Cats</option><option>Gold Coast Suns</option><option>GWS Giants</option>
+        <option>Hawthorn</option><option>Melbourne</option><option>North Melbourne</option>
+        <option>Port Adelaide</option><option>Richmond</option><option>St Kilda</option>
+        <option>Sydney Swans</option><option>West Coast Eagles</option><option>Western Bulldogs</option>
+      </select>
+
+      <input type="text" id="b22-search" class="input-field" placeholder="Search and add players..." oninput="filterB22()">
+      <div class="sugg-box" id="b22-sugg"></div>
+
+      <div class="position-grid">
+        <div class="pos-section">
+          <div class="pos-label def">DEF</div>
+          <div class="pos-slots" id="def-slots"></div>
+        </div>
+        <div class="pos-section">
+          <div class="pos-label mid">MID</div>
+          <div class="pos-slots" id="mid-slots"></div>
+        </div>
+        <div class="pos-section">
+          <div class="pos-label ruc">RUC</div>
+          <div class="pos-slots" id="ruc-slots"></div>
+        </div>
+        <div class="pos-section">
+          <div class="pos-label fwd">FWD</div>
+          <div class="pos-slots" id="fwd-slots"></div>
+        </div>
+      </div>
+
+      <button class="btn-analyse" onclick="analyseB22()">🏆 Analyse Best 22</button>
+    </div>
+    <div id="b22-result"></div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js');
+      });
+    }
+  </script>
+</body>
+</html>
