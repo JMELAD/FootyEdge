@@ -3,8 +3,7 @@ const GROQ_API_URL = '/api/analyse';
 const MODEL = 'llama-3.3-70b-versatile';
 
 // ─── API KEY ──────────────────────────────────────────────
-function getApiKey() {
-  return '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';
+
 }
 
 function saveApiKey() {
