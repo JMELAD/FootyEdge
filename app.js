@@ -9,10 +9,6 @@ function getApiKey() {
 
 function saveApiKey() {
   const key = document.getElementById('api-key-input').value.trim();
-  if (!key.startsWith('gsk_')) {
-    alert('Please enter a valid Groq API key starting with gsk_');
-    return;
-  }
   localStorage.setItem('groq_api_key', key);
   document.getElementById('api-modal').classList.remove('show');
 }
