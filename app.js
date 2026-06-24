@@ -3,20 +3,15 @@ const GROQ_API_URL = '/api/analyse';
 const MODEL = 'llama-3.3-70b-versatile';
 
 // ─── API KEY ──────────────────────────────────────────────
-
-}
-
-function saveApiKey() {
-  const key = document.getElementById('api-key-input').value.trim();
-  localStorage.setItem('groq_api_key', key);
-  document.getElementById('api-modal').classList.remove('show');
+function getApiKey() {
+  return true;
 }
 
 function checkApiKey() {
-  if (!getApiKey()) {
-    document.getElementById('api-modal').classList.add('show');
-    return false;
-  }
+  return true;
+}
+
+function saveApiKey() {
   return true;
 }
 
@@ -71,10 +66,7 @@ async function callGroq(messages) {
   const response = await fetch(GROQ_API_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      apiKey: getApiKey(),
-      messages: messages
-    })
+    body: JSON.stringify({ messages: messages })
   });
   const data = await response.json();
   if (data.error) throw new Error(data.error.message || JSON.stringify(data.error));
@@ -83,7 +75,6 @@ async function callGroq(messages) {
 
 // ─── BET SLIP ANALYSIS ────────────────────────────────────
 async function analyseBetSlip() {
-  if (!checkApiKey()) return;
   if (!currentImageBase64) return;
 
   const btn = document.getElementById('analyse-btn-text');
@@ -182,7 +173,7 @@ Respond in this JSON format only, no markdown:
 
   } catch (err) {
     clearInterval(stepInterval);
-    resultArea.innerHTML = `<div class="result-card"><p class="muted">❌ Error: ${err.message}</p><p class="muted" style="margin-top:8px">Please check your API key and try again.</p></div>`;
+    resultArea.innerHTML = `<div class="result-card"><p class="muted">❌ Error: ${err.message}</p><p class="muted" style="margin-top:8px">Please try again.</p></div>`;
   }
 
   btn.textContent = '🔍 Analyse Slip';
@@ -291,7 +282,6 @@ function renderChips() {
 }
 
 async function analyseDisposals() {
-  if (!checkApiKey()) return;
   const opp = document.getElementById('opp-select').value;
   if (!opp) { alert('Please select an opposition team.'); return; }
   if (!selectedPlayers.length) { alert('Please select at least one player.'); return; }
@@ -418,7 +408,6 @@ function filterB22() {
 }
 
 async function analyseB22() {
-  if (!checkApiKey()) return;
   const myTeam = document.getElementById('my-team').value;
   const opp = document.getElementById('opp-team').value;
   if (!myTeam || !opp) { alert('Please select both teams.'); return; }
@@ -483,6 +472,5 @@ Respond in JSON only, no markdown:
 
 // ─── INIT ─────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-  checkApiKey();
   initB22();
 });
