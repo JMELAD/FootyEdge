@@ -24,8 +24,9 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: 'qwen/qwen3.6-27b',
         messages: messages,
-        temperature: 0.5,
-        max_tokens: 2000
+        temperature: 0.4,
+        max_tokens: 4000,
+        response_format: { type: 'json_object' }
       })
     });
 
