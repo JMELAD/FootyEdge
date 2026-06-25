@@ -25,25 +25,37 @@ function showTab(name) {
 
 // ─── PLAYER DATA ──────────────────────────────────────────
 const PLAYERS = [
-  ["Jordan Dawson","Adelaide Crows","Defender",23.4],["Rory Laird","Adelaide Crows","Defender",24.1],["Josh Worrell","Adelaide Crows","Defender",21.0],["Jake Soligo","Adelaide Crows","Midfielder",20.9],["Izak Rankine","Adelaide Crows","Forward",20.6],["James Peatling","Adelaide Crows","Midfielder",18.7],["Wayne Milera","Adelaide Crows","Defender",17.8],["Ben Keays","Adelaide Crows","Midfielder",16.8],["Alex Neal-Bullen","Adelaide Crows","Midfielder",16.3],["Taylor Walker","Adelaide Crows","Forward",12.2],["Riley Thilthorpe","Adelaide Crows","Ruck",13.7],["Darcy Fogarty","Adelaide Crows","Forward",11.2],["Isaac Cumming","Adelaide Crows","Defender",14.6],["Sam Berry","Adelaide Crows","Midfielder",14.7],["Mitch Hinge","Adelaide Crows","Defender",15.6],["Daniel Curtin","Adelaide Crows","Midfielder",13.4],["Max Michalanney","Adelaide Crows","Defender",13.3],["Reilly O'Brien","Adelaide Crows","Ruck",12.0],["Finnbar Maley","Adelaide Crows","Forward",8.0,1],
+  ["Jordan Dawson","Adelaide Crows","Midfielder",23.4],["Rory Laird","Adelaide Crows","Defender",24.1],["Josh Worrell","Adelaide Crows","Defender",21.0],["Jake Soligo","Adelaide Crows","Midfielder",20.9],["Izak Rankine","Adelaide Crows","Forward",20.6],["James Peatling","Adelaide Crows","Midfielder",18.7],["Wayne Milera","Adelaide Crows","Defender",17.8],["Ben Keays","Adelaide Crows","Midfielder",16.8],["Alex Neal-Bullen","Adelaide Crows","Midfielder",16.3],["Taylor Walker","Adelaide Crows","Forward",12.2],["Riley Thilthorpe","Adelaide Crows","Forward",13.7],["Darcy Fogarty","Adelaide Crows","Forward",11.2],["Isaac Cumming","Adelaide Crows","Defender",14.6],["Sam Berry","Adelaide Crows","Midfielder",14.7],["Mitch Hinge","Adelaide Crows","Defender",15.6],["Daniel Curtin","Adelaide Crows","Midfielder",13.4],["Max Michalanney","Adelaide Crows","Defender",13.3],["Reilly O'Brien","Adelaide Crows","Ruck",12.0],["Finnbar Maley","Adelaide Crows","Forward",8.0,1],
   ["Will Ashcroft","Brisbane Lions","Midfielder",27.2],["Hugh McCluggage","Brisbane Lions","Midfielder",27.1],["Dayne Zorko","Brisbane Lions","Defender",26.3],["Josh Dunkley","Brisbane Lions","Midfielder",24.6],["Lachie Neale","Brisbane Lions","Midfielder",26.8],["Jaspa Fletcher","Brisbane Lions","Defender",21.3],["Darcy Wilmot","Brisbane Lions","Defender",20.3],["Zac Bailey","Brisbane Lions","Forward",20.0],["Levi Ashcroft","Brisbane Lions","Midfielder",19.2],["Jarrod Berry","Brisbane Lions","Midfielder",19.9],["Cam Rayner","Brisbane Lions","Forward",15.6],["Harris Andrews","Brisbane Lions","Defender",14.2],["Charlie Cameron","Brisbane Lions","Forward",9.6],["Eric Hipwood","Brisbane Lions","Forward",10.5],["Logan Morris","Brisbane Lions","Forward",9.4],["Ryan Lester","Brisbane Lions","Defender",12.8],["Noah Answerth","Brisbane Lions","Defender",13.3],["Kai Lohmann","Brisbane Lions","Forward",10.2],["Oscar Allen","Brisbane Lions","Forward",13.0,1],["Sam Draper","Brisbane Lions","Ruck",11.0,1],
-  ["Patrick Cripps","Carlton","Midfielder",24.2],["Sam Walsh","Carlton","Midfielder",22.0],["George Hewett","Carlton","Midfielder",28.1],["Adam Cerra","Carlton","Midfielder",24.6],["Matthew Kennedy","Carlton","Midfielder",23.2],["Oliver Hollands","Carlton","Midfielder",19.1],["Lachie Fogarty","Carlton","Winger",15.0],["Jacob Weitering","Carlton","Defender",14.0],["Nic Newman","Carlton","Defender",16.0],["Zac Williams","Carlton","Defender",16.0],["Marc Pittonet","Carlton","Ruck",12.0],["Jack Martin","Carlton","Forward",15.0],["Lachie Young","Carlton","Defender",14.0],["Paddy Dow","Carlton","Midfielder",14.0],["Ben Ainsworth","Carlton","Forward",14.0,1],["Will Hayward","Carlton","Forward",16.0,1],["Oliver Florent","Carlton","Midfielder",15.0,1],["Liam Reidy","Carlton","Midfielder",12.0,1],
-  ["Nick Daicos","Collingwood","Midfielder",30.0],["Josh Daicos","Collingwood","Winger",26.8],["Scott Pendlebury","Collingwood","Midfielder",22.1],["Steele Sidebottom","Collingwood","Midfielder",21.2],["Jack Crisp","Collingwood","Midfielder",20.0],["Ned Long","Collingwood","Ruck",17.8],["Darcy Cameron","Collingwood","Ruck",17.6],["Jordan De Goey","Collingwood","Forward",18.0],["Jamie Elliott","Collingwood","Forward",12.0],["Beau McCreery","Collingwood","Forward",13.0],["Nathan Murphy","Collingwood","Defender",16.0],["Isaac Quaynor","Collingwood","Defender",15.0],["Bobby Hill","Collingwood","Forward",14.0],["Lachie Sullivan","Collingwood","Forward",13.0],["Jack Buller","Collingwood","Midfielder",16.0,1],
-  ["Zach Merrett","Essendon","Midfielder",27.8],["Andrew McGrath","Essendon","Midfielder",22.7],["Archie Roberts","Essendon","Defender",24.5],["Mason Redman","Essendon","Defender",22.9],["Sam Durham","Essendon","Midfielder",21.9],["Darcy Parish","Essendon","Midfielder",20.0],["Kyle Langford","Essendon","Forward",13.0],["Peter Wright","Essendon","Forward",10.0],["Ben McKay","Essendon","Defender",14.0],["Nik Cox","Essendon","Forward",12.0],["Jordan Ridley","Essendon","Defender",16.0],["Nick Hind","Essendon","Winger",15.0],["Xavier Duursma","Essendon","Midfielder",14.0],["Matt Guelfi","Essendon","Forward",12.0],["Brayden Fiorini","Essendon","Midfielder",18.0,1],
-  ["Caleb Serong","Fremantle","Midfielder",27.4],["Andrew Brayshaw","Fremantle","Midfielder",27.0],["Jordan Clark","Fremantle","Winger",24.1],["Luke Ryan","Fremantle","Defender",20.8],["Hayden Young","Fremantle","Defender",19.0],["Sean Darcy","Fremantle","Ruck",14.0],["Josh Treacy","Fremantle","Forward",12.0],["Jye Amiss","Fremantle","Forward",13.0],["Nathan O'Driscoll","Fremantle","Midfielder",16.0],["Brennan Cox","Fremantle","Forward",11.0],["Griffin Logue","Fremantle","Defender",14.0],["Heath Chapman","Fremantle","Defender",15.0],["Jaeger O'Meara","Fremantle","Midfielder",17.0],["Judd McVee","Fremantle","Defender",16.0,1],["Mason Cox","Fremantle","Ruck",8.0,1],
+  ["Patrick Cripps","Carlton","Midfielder",24.2],["Sam Walsh","Carlton","Midfielder",22.0],["George Hewett","Carlton","Midfielder",28.1],["Adam Cerra","Carlton","Midfielder",24.6],["Matthew Kennedy","Carlton","Midfielder",23.2],["Oliver Hollands","Carlton","Midfielder",19.1],["Lachie Fogarty","Carlton","Winger",15.0],["Jacob Weitering","Carlton","Defender",14.0],["Nic Newman","Carlton","Defender",16.0],["Zac Williams","Carlton","Defender",16.0],["Marc Pittonet","Carlton","Ruck",12.0],["Jack Martin","Carlton","Forward",15.0],["Lachie Young","Carlton","Defender",14.0],["Paddy Dow","Carlton","Midfielder",14.0],["Ben Ainsworth","Carlton","Forward",14.0,1],["Will Hayward","Carlton","Forward",16.0,1],["Oliver Florent","Carlton","Midfielder",15.0,1],["Liam Reidy","Carlton","Ruck",12.0,1],["Campbell Chesser","Carlton","Midfielder",14.0,1],
+  ["Nick Daicos","Collingwood","Midfielder",30.0],["Josh Daicos","Collingwood","Winger",26.8],["Scott Pendlebury","Collingwood","Midfielder",22.1],["Steele Sidebottom","Collingwood","Midfielder",21.2],["Jack Crisp","Collingwood","Midfielder",20.0],["Ned Long","Collingwood","Midfielder",17.8],["Darcy Cameron","Collingwood","Ruck",17.6],["Jordan De Goey","Collingwood","Forward",18.0],["Jamie Elliott","Collingwood","Forward",12.0],["Beau McCreery","Collingwood","Forward",13.0],["Isaac Quaynor","Collingwood","Defender",15.0],["Bobby Hill","Collingwood","Forward",14.0],["Lachie Sullivan","Collingwood","Forward",13.0],["Jack Buller","Collingwood","Forward",16.0,1],
+  ["Zach Merrett","Essendon","Midfielder",27.8],["Andrew McGrath","Essendon","Midfielder",22.7],["Archie Roberts","Essendon","Defender",24.5],["Mason Redman","Essendon","Defender",22.9],["Sam Durham","Essendon","Midfielder",21.9],["Darcy Parish","Essendon","Midfielder",20.0],["Kyle Langford","Essendon","Forward",13.0],["Peter Wright","Essendon","Forward",10.0],["Ben McKay","Essendon","Defender",14.0],["Nik Cox","Essendon","Forward",12.0],["Jordan Ridley","Essendon","Defender",16.0],["Nick Hind","Essendon","Winger",15.0],["Xavier Duursma","Essendon","Midfielder",14.0],["Matt Guelfi","Essendon","Forward",12.0],["Brayden Fiorini","Essendon","Midfielder",18.0,1],["Jade Gresham","Essendon","Forward",16.0],
+  ["Caleb Serong","Fremantle","Midfielder",27.4],["Andrew Brayshaw","Fremantle","Midfielder",27.0],["Jordan Clark","Fremantle","Defender",24.1],["Luke Ryan","Fremantle","Defender",20.8],["Hayden Young","Fremantle","Defender",19.0],["Sean Darcy","Fremantle","Ruck",14.0],["Josh Treacy","Fremantle","Forward",12.0],["Jye Amiss","Fremantle","Forward",13.0],["Nathan O'Driscoll","Fremantle","Midfielder",16.0],["Brennan Cox","Fremantle","Forward",11.0],["Griffin Logue","Fremantle","Defender",14.0],["Heath Chapman","Fremantle","Defender",15.0],["Jaeger O'Meara","Fremantle","Midfielder",17.0],["Judd McVee","Fremantle","Defender",16.0,1],["Mason Cox","Fremantle","Ruck",8.0,1],["Shai Bolton","Fremantle","Forward",18.0],
   ["Bailey Smith","Geelong Cats","Midfielder",31.3],["Max Holmes","Geelong Cats","Winger",26.9],["Gryan Miers","Geelong Cats","Winger",22.3],["Tom Atkins","Geelong Cats","Midfielder",19.7],["Zach Guthrie","Geelong Cats","Defender",17.5],["Oliver Dempsey","Geelong Cats","Forward",17.0],["Patrick Dangerfield","Geelong Cats","Midfielder",20.0],["Jeremy Cameron","Geelong Cats","Forward",14.0],["Tom Hawkins","Geelong Cats","Forward",10.0],["Mark Blicavs","Geelong Cats","Ruck",14.0],["Tanner Bruhn","Geelong Cats","Midfielder",16.0],["Sam De Koning","Geelong Cats","Defender",13.0],["Jack Henry","Geelong Cats","Defender",14.0],["Tyson Stengle","Geelong Cats","Forward",14.0],["Brad Close","Geelong Cats","Forward",13.0],["James Worpel","Geelong Cats","Midfielder",17.0,1],
   ["Noah Anderson","Gold Coast Suns","Midfielder",30.1],["Matt Rowell","Gold Coast Suns","Midfielder",26.3],["John Noble","Gold Coast Suns","Defender",25.3],["Touk Miller","Gold Coast Suns","Midfielder",24.7],["Joel Jeffrey","Gold Coast Suns","Defender",18.8],["Ben King","Gold Coast Suns","Forward",13.0],["Wil Powell","Gold Coast Suns","Defender",15.0],["Bodhi Uwland","Gold Coast Suns","Midfielder",14.0],["Jed Walter","Gold Coast Suns","Forward",13.0],["Jack Lukosius","Gold Coast Suns","Forward",16.0],["Christian Petracca","Gold Coast Suns","Midfielder",25.5,1],["Jamarra Ugle-Hagan","Gold Coast Suns","Forward",12.0,1],
   ["Tom Green","GWS Giants","Midfielder",29.7],["Lachie Whitfield","GWS Giants","Defender",28.7],["Lachie Ash","GWS Giants","Defender",27.9],["Finn Callaghan","GWS Giants","Midfielder",28.4],["Harry Himmelberg","GWS Giants","Defender",18.5],["Connor Idun","GWS Giants","Defender",18.2],["Toby Greene","GWS Giants","Forward",17.0],["Stephen Coniglio","GWS Giants","Midfielder",18.0],["Josh Kelly","GWS Giants","Midfielder",20.0],["Jesse Hogan","GWS Giants","Forward",12.0],["Tom Hutchesson","GWS Giants","Forward",11.0],["Aaron Cadman","GWS Giants","Forward",10.0],["Brent Daniels","GWS Giants","Forward",14.0],["Sam Taylor","GWS Giants","Defender",14.0],["Clayton Oliver","GWS Giants","Midfielder",25.5,1],
-  ["Jai Newcombe","Hawthorn","Midfielder",22.9],["Karl Amon","Hawthorn","Winger",24.0],["James Sicily","Hawthorn","Defender",19.5],["Josh Ward","Hawthorn","Midfielder",20.6],["Dylan Moore","Hawthorn","Forward",19.4],["Massimo D'Ambrosio","Hawthorn","Defender",18.2],["Josh Battle","Hawthorn","Defender",18.5],["Jack Ginnivan","Hawthorn","Forward",18.6],["Jarman Impey","Hawthorn","Winger",19.3],["Will Day","Hawthorn","Defender",18.0],["Mitch Lewis","Hawthorn","Forward",13.0],["Connor MacDonald","Hawthorn","Forward",14.0],["Jack Scrimshaw","Hawthorn","Defender",15.0],["Denver Grainger-Barras","Hawthorn","Defender",14.0],["Flynn Perez","Hawthorn","Midfielder",12.0,1],
-  ["Max Gawn","Melbourne","Ruck",20.7],["Christian Salem","Melbourne","Defender",22.9],["Jake Bowey","Melbourne","Defender",22.6],["Trent Rivers","Melbourne","Defender",21.3],["Ed Langdon","Melbourne","Winger",19.0],["Jack Viney","Melbourne","Midfielder",18.0],["Kysaiah Pickett","Melbourne","Forward",14.0],["Bayley Fritsch","Melbourne","Forward",14.0],["Tom McDonald","Melbourne","Forward",12.0],["James Jordon","Melbourne","Midfielder",16.0],["Koltyn Tholstrup","Melbourne","Forward",12.0],["Lachie Hunter","Melbourne","Midfielder",16.0],["Brody Mihocek","Melbourne","Forward",13.0,1],["Changkuoth Jiath","Melbourne","Defender",15.0,1],["Jack Steele","Melbourne","Midfielder",20.9,1],["Max Heath","Melbourne","Midfielder",14.0,1],
+  ["Jai Newcombe","Hawthorn","Midfielder",22.9],["Karl Amon","Hawthorn","Winger",24.0],["James Sicily","Hawthorn","Defender",19.5],["Josh Ward","Hawthorn","Midfielder",20.6],["Dylan Moore","Hawthorn","Forward",19.4],["Massimo D'Ambrosio","Hawthorn","Defender",18.2],["Josh Battle","Hawthorn","Defender",18.5],["Jack Ginnivan","Hawthorn","Forward",18.6],["Jarman Impey","Hawthorn","Winger",19.3],["Will Day","Hawthorn","Midfielder",18.0],["Mitch Lewis","Hawthorn","Forward",13.0],["Connor MacDonald","Hawthorn","Forward",14.0],["Jack Scrimshaw","Hawthorn","Defender",15.0],["Denver Grainger-Barras","Hawthorn","Defender",14.0],["Flynn Perez","Hawthorn","Midfielder",12.0,1],["Tom Barrass","Hawthorn","Defender",16.0],
+  ["Max Gawn","Melbourne","Ruck",20.7],["Christian Salem","Melbourne","Defender",22.9],["Jake Bowey","Melbourne","Defender",22.6],["Trent Rivers","Melbourne","Defender",21.3],["Ed Langdon","Melbourne","Winger",19.0],["Jack Viney","Melbourne","Midfielder",18.0],["Kysaiah Pickett","Melbourne","Forward",14.0],["Bayley Fritsch","Melbourne","Forward",14.0],["Tom McDonald","Melbourne","Forward",12.0],["Koltyn Tholstrup","Melbourne","Forward",12.0],["Lachie Hunter","Melbourne","Midfielder",16.0],["Brody Mihocek","Melbourne","Forward",13.0,1],["Changkuoth Jiath","Melbourne","Defender",15.0,1],["Jack Steele","Melbourne","Midfielder",20.9,1],["Max Heath","Melbourne","Midfielder",14.0,1],
   ["Harry Sheezel","North Melbourne","Defender",29.3],["Luke Davies-Uniacke","North Melbourne","Midfielder",24.7],["Caleb Daniel","North Melbourne","Defender",25.6],["Tom Powell","North Melbourne","Midfielder",23.0],["Colby McKercher","North Melbourne","Midfielder",23.1],["Jy Simpkin","North Melbourne","Midfielder",22.1],["Luke Parker","North Melbourne","Midfielder",23.3],["Nick Larkey","North Melbourne","Forward",14.0],["Zac Fisher","North Melbourne","Winger",16.0],["Hugh Greenwood","North Melbourne","Midfielder",15.0],["Tristan Xerri","North Melbourne","Ruck",12.0],["Tom Goldhagen","North Melbourne","Forward",11.0],["Charlie Spargo","North Melbourne","Forward",12.0,1],
-  ["Connor Rozee","Port Adelaide","Forward",27.4],["Zak Butters","Port Adelaide","Midfielder",27.9],["Ollie Wines","Port Adelaide","Midfielder",25.4],["Jason Horne-Francis","Port Adelaide","Midfielder",22.0],["Willem Drew","Port Adelaide","Midfielder",18.0],["Todd Marshall","Port Adelaide","Forward",13.0],["Trent McKenzie","Port Adelaide","Defender",17.0],["Darcy Byrne-Jones","Port Adelaide","Defender",16.0],["Mitch Georgiades","Port Adelaide","Forward",12.0],["Lachie Jones","Port Adelaide","Defender",14.0],["Miles Bergman","Port Adelaide","Defender",15.0],["Will Brodie","Port Adelaide","Midfielder",18.0,1],["Corey Durdin","Port Adelaide","Forward",13.0,1],["Jacob Wehr","Port Adelaide","Defender",12.0,1],
-  ["Jacob Hopper","Richmond","Midfielder",26.4],["Tim Taranto","Richmond","Midfielder",25.6],["Sam Banks","Richmond","Defender",20.2],["Jack Ross","Richmond","Midfielder",19.1],["Shai Bolton","Richmond","Forward",18.0],["Noah Balta","Richmond","Defender",16.0],["Tom Lynch","Richmond","Forward",12.0],["Nick Vlastuin","Richmond","Defender",15.0],["Hugo Ralphsmith","Richmond","Forward",13.0],["Rhyan Mansell","Richmond","Forward",12.0],["Liam Shacklock","Richmond","Midfielder",14.0],["Patrick Retschko","Richmond","Midfielder",14.0,1],
-  ["Nasiah Wanganeen-Milera","St Kilda","Winger",29.9],["Jack Sinclair","St Kilda","Defender",26.9],["Jack Macrae","St Kilda","Midfielder",24.6],["Marcus Windhager","St Kilda","Midfielder",22.1],["Callum Wilkie","St Kilda","Defender",18.7],["Brad Hill","St Kilda","Winger",19.6],["Max King","St Kilda","Forward",13.0],["Rowan Marshall","St Kilda","Ruck",14.0],["Jade Gresham","St Kilda","Midfielder",16.0],["Hunter Clark","St Kilda","Midfielder",17.0],["Ryan Byrnes","St Kilda","Forward",14.0],["Mitch Owens","St Kilda","Midfielder",16.0],["Sam Flanders","St Kilda","Midfielder",18.7,1],["Tom De Koning","St Kilda","Ruck",13.0,1],["Jack Silvagni","St Kilda","Forward",14.0,1],["Liam Ryan","St Kilda","Forward",14.0,1],
-  ["Isaac Heeney","Sydney Swans","Forward",23.6],["Chad Warner","Sydney Swans","Midfielder",22.2],["Nick Blakey","Sydney Swans","Defender",21.4],["Errol Gulden","Sydney Swans","Midfielder",20.0],["James Rowbottom","Sydney Swans","Midfielder",18.0],["Callum Mills","Sydney Swans","Midfielder",23.8],["Tom Papley","Sydney Swans","Forward",14.0],["Joel Amartey","Sydney Swans","Forward",11.0],["Harry Cunningham","Sydney Swans","Winger",15.0],["Brodie Grundy","Sydney Swans","Ruck",14.0],["Taylor Adams","Sydney Swans","Midfielder",16.0],["Justin McInerney","Sydney Swans","Midfielder",15.0],["Lewis Melican","Sydney Swans","Defender",14.0],["Angus Sheldrick","Sydney Swans","Midfielder",13.0],["Tom McCartin","Sydney Swans","Defender",14.0],["Charlie Curnow","Sydney Swans","Forward",16.0,1],["Malcolm Rosas Jr","Sydney Swans","Midfielder",12.0,1],["Jai Serong","Sydney Swans","Midfielder",13.0,1],
-  ["Harley Reid","West Coast Eagles","Midfielder",22.0],["Liam Baker","West Coast Eagles","Midfielder",22.1],["Ryan Maric","West Coast Eagles","Defender",20.9],["Tom Barrass","West Coast Eagles","Defender",16.0],["Elliot Yeo","West Coast Eagles","Midfielder",17.0],["Andrew Gaff","West Coast Eagles","Midfielder",18.0],["Jack Darling","West Coast Eagles","Forward",11.0],["Jamaine Jones","West Coast Eagles","Forward",13.0],["Reuben Ginbey","West Coast Eagles","Midfielder",16.0],["Rhett Bazzo","West Coast Eagles","Defender",14.0],["Brandon Starcevich","West Coast Eagles","Defender",10.0,1],["Campbell Chesser","West Coast Eagles","Midfielder",14.0,1],["Tylar Young","West Coast Eagles","Forward",10.0,1],
-  ["Marcus Bontempelli","Western Bulldogs","Midfielder",27.1],["Bailey Dale","Western Bulldogs","Defender",27.0],["Tom Liberatore","Western Bulldogs","Midfielder",26.5],["Ed Richards","Western Bulldogs","Midfielder",25.8],["Matthew Kennedy","Western Bulldogs","Midfielder",23.2],["Bailey Williams","Western Bulldogs","Defender",19.7],["Joel Freijah","Western Bulldogs","Forward",19.0],["Adam Treloar","Western Bulldogs","Midfielder",20.0],["Tim English","Western Bulldogs","Ruck",15.0],["Cody Weightman","Western Bulldogs","Forward",13.0],["Ryan Gardner","Western Bulldogs","Defender",14.0],["Laitham Vandermeer","Western Bulldogs","Forward",13.0],["Connor Budarick","Western Bulldogs","Midfielder",12.0,1],
+  ["Connor Rozee","Port Adelaide","Midfielder",27.4],["Zak Butters","Port Adelaide","Midfielder",27.9],["Ollie Wines","Port Adelaide","Midfielder",25.4],["Jason Horne-Francis","Port Adelaide","Midfielder",22.0],["Willem Drew","Port Adelaide","Midfielder",18.0],["Todd Marshall","Port Adelaide","Forward",13.0],["Trent McKenzie","Port Adelaide","Defender",17.0],["Darcy Byrne-Jones","Port Adelaide","Defender",16.0],["Mitch Georgiades","Port Adelaide","Forward",12.0],["Lachie Jones","Port Adelaide","Defender",14.0],["Miles Bergman","Port Adelaide","Defender",15.0],["Will Brodie","Port Adelaide","Midfielder",18.0,1],["Corey Durdin","Port Adelaide","Forward",13.0,1],["Jacob Wehr","Port Adelaide","Defender",12.0,1],
+  ["Jacob Hopper","Richmond","Midfielder",26.4],["Tim Taranto","Richmond","Midfielder",25.6],["Sam Banks","Richmond","Defender",20.2],["Jack Ross","Richmond","Midfielder",19.1],["Noah Balta","Richmond","Defender",16.0],["Tom Lynch","Richmond","Forward",12.0],["Nick Vlastuin","Richmond","Defender",15.0],["Hugo Ralphsmith","Richmond","Forward",13.0],["Rhyan Mansell","Richmond","Forward",12.0],["Liam Shacklock","Richmond","Midfielder",14.0],["Patrick Retschko","Richmond","Midfielder",14.0,1],
+  ["Nasiah Wanganeen-Milera","St Kilda","Defender",29.9],["Jack Sinclair","St Kilda","Defender",26.9],["Jack Macrae","St Kilda","Midfielder",24.6],["Marcus Windhager","St Kilda","Midfielder",22.1],["Callum Wilkie","St Kilda","Defender",18.7],["Brad Hill","St Kilda","Winger",19.6],["Max King","St Kilda","Forward",13.0],["Rowan Marshall","St Kilda","Ruck",14.0],["Hunter Clark","St Kilda","Midfielder",17.0],["Ryan Byrnes","St Kilda","Forward",14.0],["Mitch Owens","St Kilda","Midfielder",16.0],["Sam Flanders","St Kilda","Midfielder",18.7,1],["Tom De Koning","St Kilda","Ruck",13.0,1],["Jack Silvagni","St Kilda","Forward",14.0,1],["Liam Ryan","St Kilda","Forward",14.0,1],
+  ["Isaac Heeney","Sydney Swans","Midfielder",23.6],["Chad Warner","Sydney Swans","Midfielder",22.2],["Nick Blakey","Sydney Swans","Defender",21.4],["Errol Gulden","Sydney Swans","Midfielder",20.0],["James Rowbottom","Sydney Swans","Midfielder",18.0],["Callum Mills","Sydney Swans","Defender",23.8],["Tom Papley","Sydney Swans","Forward",14.0],["Joel Amartey","Sydney Swans","Forward",11.0],["Harry Cunningham","Sydney Swans","Winger",15.0],["Brodie Grundy","Sydney Swans","Ruck",14.0],["Taylor Adams","Sydney Swans","Midfielder",16.0],["Justin McInerney","Sydney Swans","Midfielder",15.0],["Lewis Melican","Sydney Swans","Defender",14.0],["Angus Sheldrick","Sydney Swans","Midfielder",13.0],["Tom McCartin","Sydney Swans","Defender",14.0],["Charlie Curnow","Sydney Swans","Forward",16.0,1],["Malcolm Rosas Jr","Sydney Swans","Forward",12.0,1],["James Jordon","Sydney Swans","Midfielder",16.0],["Jai Serong","Sydney Swans","Defender",13.0,1],
+  ["Harley Reid","West Coast Eagles","Midfielder",22.0],["Liam Baker","West Coast Eagles","Midfielder",22.1],["Ryan Maric","West Coast Eagles","Defender",20.9],["Elliot Yeo","West Coast Eagles","Midfielder",17.0],["Jamaine Jones","West Coast Eagles","Forward",13.0],["Reuben Ginbey","West Coast Eagles","Defender",16.0],["Rhett Bazzo","West Coast Eagles","Defender",14.0],["Brandon Starcevich","West Coast Eagles","Defender",10.0,1],["Tylar Young","West Coast Eagles","Forward",10.0,1],
+  ["Marcus Bontempelli","Western Bulldogs","Midfielder",27.1],["Bailey Dale","Western Bulldogs","Defender",27.0],["Tom Liberatore","Western Bulldogs","Midfielder",26.5],["Ed Richards","Western Bulldogs","Midfielder",25.8],["Bailey Williams","Western Bulldogs","Defender",19.7],["Joel Freijah","Western Bulldogs","Forward",19.0],["Adam Treloar","Western Bulldogs","Midfielder",20.0],["Tim English","Western Bulldogs","Ruck",15.0],["Cody Weightman","Western Bulldogs","Forward",13.0],["Ryan Gardner","Western Bulldogs","Defender",14.0],["Laitham Vandermeer","Western Bulldogs","Forward",13.0],["Connor Budarick","Western Bulldogs","Midfielder",12.0,1],
 ];
+
+// ─── RECENT FORM DATA ─────────────────────────────────────
+// Format: "Player Name": { last5: [g1,g2,g3,g4,g5], vs: { "Opponent Team": [g1..g5] } }
+// last5 = disposals from the 5 most recent games (most recent LAST).
+// vs    = disposals in the last 5 games against that specific opponent.
+// These MUST be real numbers from a stats source (AFL Tables / FootyWire) — never guessed.
+// Add a player by copying the line below. The single entry here is DEMO data to show the box.
+const RECENT_FORM = {
+  "Marcus Bontempelli": { sample: true, last5: [33, 19, 28, 31, 26], vs: { "Adelaide Crows": [30, 25, 22, 34, 27] } }
+};
+
+function dispAvg(a){ return a && a.length ? (a.reduce((x,y)=>x+y,0)/a.length).toFixed(1) : '–'; }
 
 // ─── IMAGE HANDLING ───────────────────────────────────────
 let currentImageBase64 = null;
@@ -116,19 +128,15 @@ async function analyseBetSlip() {
   try {
     const prompt = `You are FootyEdge, an expert AFL betting analyst for the 2026 season.
 
-Analyse this bet slip image and provide a comprehensive breakdown. For EACH leg automatically consider:
-1. Injury status and team selection
-2. Recent form last 3-4 games
-3. Tagging risk - does the opposition tag? Who is their tagger? Have they tagged this player before?
-4. Role changes or positional shifts
-5. Head to head matchup history
-6. Venue factors
-7. Opposition defensive weaknesses
-8. Game script risk
+STRICT RULES — follow exactly:
+- Analyse every player and bet clearly visible on the slip image first.
+- You MAY also mention OTHER players from EITHER club in the matchup — the slip player's own team AND the opponent — when they affect a slip player (e.g. an opponent's tagger, a teammate freed up by that tag, a weak defensive matchup the player can exploit, a ruck/role change).
+- ONLY use real players currently on that club's 2026 list. NEVER invent players or use anyone retired, delisted, or traded away. If unsure a player is currently at that club in 2026, do not mention them.
+- If you cannot clearly read a name on the slip, use only what you can read — do NOT replace it with a well-known player.
+- Only name a tagger if certain; if unsure set "tagging_risk":"LOW" and "tagger":"None identified". Never invent a tagger or made-up stats.
+- Put extra-player context in "reasoning" (if it's about that specific leg) or "key_insight" (if it's a broader angle) — never as fake slip legs.
 
-For each leg provide a confidence rating 1-10, value assessment VALUE or FAIR or POOR, tagging risk HIGH or MEDIUM or LOW with specific tagger named if known, key risks, verdict BACK IT or LEAN OVER or LEAN UNDER or AVOID, and 2-3 sentences of specific reasoning.
-
-Then provide overall multi rating, singles vs multi recommendation, weakest leg and key insight.
+For EACH leg give a confidence 1-10, value (VALUE/FAIR/POOR), tagging risk (HIGH/MEDIUM/LOW, tagger named only if certain), key risks, verdict (BACK IT/LEAN OVER/LEAN UNDER/AVOID), and 2-3 sentences of reasoning. Then give overall multi rating, singles vs multi recommendation, weakest leg and key insight.
 
 Respond in this exact JSON format with no markdown and no extra text outside the JSON:
 {"game":"Team A v Team B","date":"date string","odds":"2.15","legs":[{"player":"Player Name","bet":"20+ Disposals","confidence":8,"value":"VALUE","tagging_risk":"LOW","tagger":"None identified","verdict":"BACK IT","verdict_type":"back","reasoning":"Specific reasoning here","key_risk":"Main risk factor"}],"overall_rating":7,"recommendation":"Play as multi","weakest_leg":"Player name reason","key_insight":"Overall tactical insight"}`;
@@ -244,6 +252,7 @@ function renderChips() {
   const wrap = document.getElementById('chips-wrap');
   document.getElementById('sel-count').textContent = '(' + selectedPlayers.length + '/8)';
   wrap.innerHTML = '';
+  renderForm();
   if (!selectedPlayers.length) { wrap.innerHTML = '<span class="muted">No players selected</span>'; return; }
   selectedPlayers.forEach((p, i) => {
     const div = document.createElement('div');
@@ -255,6 +264,69 @@ function renderChips() {
     div.appendChild(btn);
     wrap.appendChild(div);
   });
+}
+
+const formCache = {}; // player name -> 'loading' | null | [{opp, di}]
+
+function computeForm(games, opp) {
+  const last5 = games.slice(-5).map(g => g.di);
+  const vs = opp ? games.filter(g => g.opp === opp).slice(-5).map(g => g.di) : null;
+  return { last5, vs };
+}
+
+function fetchForm(name, team) {
+  if (name in formCache) return;   // already fetched or in-flight
+  if (RECENT_FORM[name]) return;   // manual override present
+  formCache[name] = 'loading';
+  fetch(`/api/stats?player=${encodeURIComponent(name)}&team=${encodeURIComponent(team)}`)
+    .then(r => r.json())
+    .then(d => { formCache[name] = (d && Array.isArray(d.games) && d.games.length) ? d.games : null; })
+    .catch(() => { formCache[name] = null; })
+    .finally(() => renderForm());
+}
+
+function renderForm() {
+  const host = document.getElementById('disposal-result');
+  if (!host || !host.parentNode) return;
+  let box = document.getElementById('form-box');
+  if (!box) { box = document.createElement('div'); box.id = 'form-box'; host.parentNode.insertBefore(box, host); }
+  if (!selectedPlayers.length) { box.innerHTML = ''; return; }
+  const opp = (document.getElementById('opp-select') || {}).value || '';
+  const muted = (t) => `<span style="color:#4a5568">${t}</span>`;
+  let html = '';
+  selectedPlayers.forEach(p => {
+    const name = p[0], team = p[1];
+    let last5Arr = null, vsArr = null, sample = false, loading = false;
+
+    if (RECENT_FORM[name]) {                       // 1) manual override wins
+      const f = RECENT_FORM[name];
+      last5Arr = f.last5 || null;
+      vsArr = (f.vs && opp) ? (f.vs[opp] || null) : null;
+      sample = !!f.sample;
+    } else if (Array.isArray(formCache[name])) {   // 2) scraped data cached
+      const c = computeForm(formCache[name], opp);
+      last5Arr = c.last5; vsArr = c.vs;
+    } else if (formCache[name] === 'loading') {    // 3) request in-flight
+      loading = true;
+    } else if (formCache[name] === null) {         // 4) tried, no data
+      // show "no data yet"
+    } else {                                       // 5) not requested yet
+      fetchForm(name, team); loading = true;
+    }
+
+    const last5 = loading ? muted('loading…')
+                : (last5Arr && last5Arr.length ? `${last5Arr.join(', ')} ${muted('(avg ' + dispAvg(last5Arr) + ')')}` : muted('no data yet'));
+    const vsLine = !opp ? muted('select an opponent')
+                 : loading ? muted('loading…')
+                 : (vsArr && vsArr.length ? `${vsArr.join(', ')} ${muted('(avg ' + dispAvg(vsArr) + ')')}` : muted('no data yet'));
+
+    html += `<div class="result-card" style="padding:10px 14px">
+      <div class="result-player">${name}${sample ? ' <span style="font-size:10px;color:#ffab00">(demo data – replace)</span>' : ''}</div>
+      <div class="result-text" style="font-size:13px">📊 Last 5: ${last5}</div>
+      <div class="result-text" style="font-size:13px">⚔️ Last 5 v ${opp || '—'}: ${vsLine}</div>
+    </div>`;
+  });
+  box.innerHTML = html;
 }
 
 async function analyseDisposals() {
@@ -430,4 +502,6 @@ Respond in this exact JSON format with no markdown and no extra text outside the
 // ─── INIT ─────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   initB22();
+  const oppSel = document.getElementById('opp-select');
+  if (oppSel) oppSel.addEventListener('change', renderForm);
 });
